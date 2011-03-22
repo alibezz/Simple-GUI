@@ -1,0 +1,55 @@
+************ DEPENDÊNCIAS **************
+
+	Este programa foi desenvolvido no sistema operacional Linux, distribuição Debian, e apresenta dependência da biblioteca TERMIOS.H. Ele foi exaustivamente testado no gnome-terminal. Além disso, utilizamos a biblioteca STDBOOL.H.
+
+*********** DEFINIÇÕES *****************
+
+	Este programa consiste de 3 grandes partes: a entrada de dados que definem as caixas, feita pelo usuario; a simulação da interface e o gerenciamento de remoção. Embora tenha sido dito em sala que o programa só precisava ter funções de remoção, decididimos, para tornar este programa mais amigavel, criar este gerenciador, para que estas funções possam ser melhor testadas e utilizadas. 
+	
+	1. A entrada de dados	
+	
+	A entrada de dados possui alguns detalhes. Abaixo, eles estão detalhados:
+
+	CAIXA DE TEXTO - O usuario deve entrar com a coluna, a linha, a altura e a largura da caixa. Deve ainda definir se ela está visível ou não. Se a caixa estiver visível (o usuario digitou 1), o usuário define se ela está disponível (digita 1) ou não (digita 0). Caixas invisíveis não estão disponíveis. 
+
+	ETIQUETA - Como uma etiqueta é indisponível por padrão, só é perguntado ao usuário se esta caixa está ou não visível. Além disso, é claro, o usuário deve definir sua coluna, sua linha, sua altura e seu texto. É importante que o usuário não digite mais caracteres para o texto do que o recomendado, ou parte da informação será truncada. Esta regra dos textos é válida para todas as caixas em que se pede este tipo de definição.
+
+	CHECKBOX - O usuario deve entrar com as mesmas definições que servem para a caixa de texto (menos a altura, pos a altura de uma checkbox eh 1), seguindo a mesma lógica. Além disso, ele deve entrar com um texto para a checkbox, respeitando o limite de caracteres recomendado (caso contrário, perderá informação).
+
+	LISTBOX - O usuário deve definir coluna, linha, largura e quantas opções possui a listbox. A altura da listbox corresponde a quantas opções ela possui. Além disso, o usuário deve definir sua visibilidade e disponibilidade de acordo com os mesmos criterios da textbox  e inicializar cada um dos textos da listbox (as opções), preferencialmente respeitando o limite de caracteres sugerido.
+
+	COMBOBOX - A entrada de dados da combobox se assemelha à entrada de dados da listbox. A string padrão no cabeçalho da combobox é 'Selecione'. Isso pode ser visto no arquivo comandos.h. As strings a serem selecionadas (o usuário define quantas são), que denotam o corpo desta caixa, devem ser inicializadas via teclado. 
+
+	MENUBAR - A menubar é um vetor de itens que se assemelha bastante a comboboxes. Cada item possui largura fixa. A coluna, a altura e a linha onde o menu começa também são fixas (1,1,1). O usuario define quantos itens ele quer no menu e quantas opções cada item possui, inicializando os textos destes itens também (tanto o título, como 'Arquivo', quanto as opções per se, como 'Abrir'). A quantidade de strings em um item define sua altura de modo semelhante ao que ocorre com a combobox. Como a largura da menubar é 80 e a largura de cada item é 16 (estes dados constantes podem ser alterados em comandos.h), não se recomenda a criação de mais de cinco itens (5 * 16 = 80) para o menu, pois o seu desenho não fica como o esperado, comprometendo o comportamento do programa. O usuário pode simplesmente alterar estas constantes em comandos.h.
+
+	OBS 1: Tanto visibilidade quanto disponibilidade devem ser definidas através dos valores 1 (para caso afirmativo) ou 0 (para caso negativo). Constatamos que quando outras teclas que não números são digitadas, muitas vezes o programa não se comporta como deveria (problemas com buffer).
+
+	OBS 2: Para abortar o programa na etapa de entrada de dados, CTRL+C (mas n desaloca). 
+
+	2. A simulação da Interface
+
+	ALGUMAS TECLAS ESPECIAIS:
+
+	ESC: Para abortar a simulação, é necessário apertar o ESC 2 VEZES, pois, para o mapeamento de teclado do linux, um ESC só (27) poderia ser confundido com diversas outras teclas de escape, como setas. A tecla ESC não aborta o programa no gerenciador de remoção.
+
+	DEL: Nesta etapa do trabalho, é possível chamar o gerenciador de remoção apertando a tecla DEL.
+
+	DETALHES DAS CAIXAS:
+
+	TEXTBOX: Em uma caixa de texto, caracteres comuns e backspace são tratados. Qualquer outra tecla pressionada (que não ESC ou DEL) possuem tratamento 'irrelevante'. Nada é definido para elas.
+
+	ETIQUETA: O tab sempre pulará a etiqueta e o cursor só permanecerá em uma delas se houver exclusivamente caixas indisponíveis e ela for a primeira em ordem de disposição na tela.
+
+	CHECKBOX: Quando se aperta qualquer tecla, a checkbox é selecionada com um 'x' se não estivesse selecionada ou é desselecionada se estivesse selecionada. 
+
+	LISTBOX: A listbox aceita mais de uma seleção, como algumas listboxes de enquete. Para marcar uma de suas opções ou desmarcar, é preciso pressionar alguma tecla. Listboxes, assim como comboboxes e menubars, sem strings não se comportam bem.
+
+	COMBOBOX: A combobox é sensível às teclas 'seta para baixo', 'seta para cima', espaço e enter, selecionando uma opção com estas duas e movimentando com as duas primeiras.
+
+	MENUBAR: O menubar é sensível a todas as setas.
+
+	3. Gerenciamento de remoção
+
+	No gerenciamento de remoção, acionado pela simulação através da tecla DEL, o usuário pode retirar uma caixa a partir de sua posição na lista. Se no main ele criou, na ordem, uma checkbox e uma combobox, a checkbox tem posição 1 e a checkbox tem posição 2.
+	Caso todas as caixas tenham sido apagadas, uma mensagem de encerramento de programa aparece. Mais uma vez, é importante salientar que é preciso tomar cuidado com os dígitos. Qualquer pergunta acompanhada da especificação (1->S/0->n) indica que o usuário deve digitar 1 se aceitar ou 0 em caso contrário. Ou seja: números; não letras.
+	
